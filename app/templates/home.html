@@ -11,13 +11,13 @@
         <!-- <p class="subtitle">You've written XXX words so far.</p> -->
         <a class="button is-primary">
             <span class="icon is-small">
-                <i class="fas fa-pen-to-square"></i>
+                <i class="fas fa-file-lines"></i>
             </span>
-            <span>Continue writing</span>
+            <span>Continue</span>
         </a>
         {% else %}
         <p class="subtitle">is yet to come</p>
-        <a class="button">
+        <a class="button" href="{{ url_for('new') }}">
             <span class="icon is-small">
                 <i class="fas fa-pen-to-square"></i>
             </span>

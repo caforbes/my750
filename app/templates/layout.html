@@ -45,6 +45,7 @@
                 </div> -->
         </div>
     </nav>
+
     <section class="section">
         <header>
             {% if title %}
@@ -54,12 +55,20 @@
             {% endif %}
         </header>
     </section>
-    {% if errors %}
-    <div id="flash" class="notification is-warning is-light">
-        <button class="delete"></button>
-        {{ errors[0] }}
-    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <section class="section">
+        {% for category, message in messages %}
+        <div id="flash" class="notification {% if category == 'error' %}is-danger{% else %}is-info{% endif%} is-light">
+            <!-- FIX: delete button should remove message
+              <button class="delete"></button> -->
+            {{ message }}
+        </div>
+        {% endfor %}
+    </section>
     {% endif %}
+    {% endwith %}
 
     {% block content %}{% endblock %}
 

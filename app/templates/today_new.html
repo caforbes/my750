@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<section class="section">
+    <form action="" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <div class="field">
+            <label class="label">{{ form.content.label }}</label>
+            <div class="control">
+                {{ form.content(class_="textarea", rows="15") }}
+            </div>
+        </div>
+
+        <div class="field is-grouped is-grouped-right">
+            <div class="control">
+                {{ form.submit(class_="button is-success") }}
+            </div>
+            <div class="control">
+                <a href="{{ url_for('home') }}" class="button is-light">Go Back</a>
+            </div>
+        </div>
+        <p></p>
+    </form>
+</section>
+
+{% endblock %}
