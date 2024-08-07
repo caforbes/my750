@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+python-dotenv = "*"
+
+[dev-packages]
+black = "*"
+flake8 = "*"
+pytest = "*"
+
+[requires]
+python_version = "3.12"
+python_full_version = "3.12.4"

@@ -1,0 +1,80 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+
+<section class="hero{% if not written_today %} is-primary has-text-centered{% endif %}">
+    <div class="hero-body">
+        <p class="title">Today's writing</p>
+        <div class="container">
+            {% if written_today %}
+            <p class="content">You've written XXX words so far.</p>
+            <a class="button is-primary">
+                <span class="icon is-small">
+                    <i class="fas fa-pen-to-square"></i>
+                </span>
+                <span>Continue writing</span>
+            </a>
+            {% else %}
+            <a class="button">
+                <span class="icon is-small">
+                    <i class="fas fa-pen-to-square"></i>
+                </span>
+                <span>Start writing!</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+<!-- TODO: add review of past entries
+<section class="section">
+    <div class="content">
+        <h2>Looking back</h2>
+        <p>
+            Your last entry was XX days ago / yesterday / today.
+        </p>
+
+        <p>
+            You've written <strong>{{ stats["total_entries"] }} entries</strong>
+            for a total of <strong>{{ stats["total_words"] }} words</strong>.
+        </p>
+    </div>
+
+    {% if past_entries %}
+    <div class="block">
+        <button class="button">View interesting stats</button>
+    </div>
+    {% endif %}
+
+
+
+    {% if past_entries %}
+
+    <div class="block">
+
+        <nav class="panel">
+            <p class="panel-heading">Recent Entries</p>
+            {% for entry in past_entries %}
+            <a class="panel-block">
+                <span class="panel-icon">
+                    <i class="fas fa-bookmark" aria-hidden="true"></i>
+                </span>
+                Content: {{ entry[:20] }}
+            </a>
+            {% endfor %}
+        </nav>
+    </div>
+    <div class="block">
+        <button class="button">View your archive</button>
+    </div>
+
+    {% else %}
+
+    <div class="content">
+        <p>You have no past entries!</p>
+    </div>
+
+    {% endif %}
+</section> -->
+
+{% endblock %}

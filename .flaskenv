@@ -1,0 +1,1 @@
+export FLASK_APP=my750.py

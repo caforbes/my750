@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if title %}
+    <title>{{ title }} - My750</title>
+    {% else %}
+    <title>My750 Journal</title>
+    {% endif %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/495d21f95c.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item has-text-weight-bold" href="/">
+                <span>My750</span>
+                <span class="icon">
+                    <i class="fa-solid fa-pen-nib"></i>
+                </span>
+            </a>
+        </div>
+        <div id="navbarItems" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="/">Home</a>
+                <!-- <a class="navbar-item" href="/archive">Archive</a> -->
+                <!-- <a class="navbar-item" href="https://github.com/caforbes">On Github</a> -->
+                <a class="navbar-item" href="https://me.caforbes.com">Made by</a>
+            </div>
+            <!-- <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="field">
+                            <a class="button is-link">
+                                <span>Say Thanks</span>
+                                TODO: add support link
+                                <span class="icon">
+                                    <i class="fa-solid fa-mug-hot"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div> -->
+        </div>
+    </nav>
+    <section class="section">
+        <header>
+            {% if title %}
+            <h1 class="title">{{ title }}</h1>
+            {% else %}
+            <h1 class="title">My750 Journal</h1>
+            <p class="subtitle is-5">Write 750 words per day!</p>
+            {% endif %}
+        </header>
+    </section>
+    {% if errors %}
+    <div id="flash" class="notification is-warning is-light">
+        <button class="delete"></button>
+        {{ errors[0] }}
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+</body>
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>
+            <strong>My750</strong> by <a href="https://me.caforbes.com">Clarissa Forbes</a> (c) 2024.
+            <!-- TODO: license info, copyright year? -->
+        </p>
+    </div>
+</footer>
+
+</html>
