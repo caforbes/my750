@@ -3,31 +3,32 @@
 {% block content %}
 
 
-<section class="hero{% if not written_today %} is-primary has-text-centered{% endif %}">
-    <div class="hero-body">
+<section class="hero{% if not written_today %} is-primary{% endif %}">
+    <div class="hero-body has-text-centered">
         <p class="title">Today's writing</p>
-        <div class="container">
-            {% if written_today %}
-            <p class="content">You've written XXX words so far.</p>
-            <a class="button is-primary">
-                <span class="icon is-small">
-                    <i class="fas fa-pen-to-square"></i>
-                </span>
-                <span>Continue writing</span>
-            </a>
-            {% else %}
-            <a class="button">
-                <span class="icon is-small">
-                    <i class="fas fa-pen-to-square"></i>
-                </span>
-                <span>Start writing!</span>
-            </a>
-            {% endif %}
-        </div>
+        {% if written_today %}
+        <!-- TODO: count words from today -->
+        <!-- <p class="subtitle">You've written XXX words so far.</p> -->
+        <a class="button is-primary">
+            <span class="icon is-small">
+                <i class="fas fa-pen-to-square"></i>
+            </span>
+            <span>Continue writing</span>
+        </a>
+        {% else %}
+        <p class="subtitle">is yet to come</p>
+        <a class="button">
+            <span class="icon is-small">
+                <i class="fas fa-pen-to-square"></i>
+            </span>
+            <span>Start writing!</span>
+        </a>
+        {% endif %}
+    </div>
     </div>
 </section>
-<!-- TODO: add review of past entries
-<section class="section">
+<!-- TODO: add review of past entries -->
+<!-- <section class="section">
     <div class="content">
         <h2>Looking back</h2>
         <p>
