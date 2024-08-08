@@ -6,8 +6,10 @@ name = "pypi"
 [packages]
 flask = "*"
 flask-wtf = "*"
+psycopg = {extras = ["binary"], version = "*"}
 python-dotenv = "*"
 wtforms = "*"
+pydantic = "*"
 
 [dev-packages]
 black = "*"
