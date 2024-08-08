@@ -3,7 +3,7 @@ from wtforms import TextAreaField, SubmitField
 from wtforms.validators import DataRequired, Length
 
 
-MAX_LEN = 10_000
+MAX_LEN = 500_000
 
 
 class EntryForm(FlaskForm):
