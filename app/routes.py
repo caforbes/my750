@@ -24,17 +24,6 @@ def home():
     )
 
 
-@app.route("/today")
-def today():
-    entry = Entry.get_today()
-
-    if not entry:
-        return redirect(url_for("new"))
-
-    # TODO: if you found something, display it - with link to today/edit page
-    return "Page to read today's words"
-
-
 @app.route("/new", methods=["GET", "POST"])
 @app.route("/today/new", methods=["GET", "POST"])
 def new():
@@ -51,7 +40,7 @@ def new():
     form = EntryForm()
     if form.validate_on_submit():
         data = form.data
-        message = Entry.create(content=data["content"])
+        Entry.create(content=data["content"])
         flash(f"Another journal entry is on the page!")
         return redirect(url_for("home"))
 
@@ -59,3 +48,14 @@ def new():
         flash("You must write some words before saving!", category="error")
 
     return render_template("today_new.html", title="A new day", form=form)
+
+
+@app.route("/today")
+def today():
+    entry = Entry.get_today()
+
+    if not entry:
+        return redirect(url_for("new"))
+
+    # TODO: if you found something, display it - with link to today/edit page
+    return "Page to read today's words"

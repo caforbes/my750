@@ -12,3 +12,4 @@ class Config:
 class TestConfig(Config):
     TESTING = True
     PG_DATABASE_URI = os.getenv("TEST_DATABASE_URL")
+    WTF_CSRF_ENABLED = False

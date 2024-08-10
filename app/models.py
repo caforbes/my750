@@ -13,6 +13,16 @@ from app.db import dbconnect
 
 class Entry:
     @classmethod
+    def count(self):
+        """
+        Count the number of Entries in the db.
+        """
+        sql_count = "SELECT count(id) FROM entries;"
+        with dbconnect() as conn:
+            result = conn.execute(sql_count).fetchone()
+        return result[0]
+
+    @classmethod
     def create(cls, content: str) -> None:
         sqlbit = "INSERT INTO entries (content) VALUES (%(content)s);"
         data = dict(content=content)
