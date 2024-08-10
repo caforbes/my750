@@ -23,16 +23,17 @@ class Entry:
         return result[0]
 
     @classmethod
-    def create(cls, content: str) -> None:
-        sqlbit = "INSERT INTO entries (content) VALUES (%(content)s);"
-        data = dict(content=content)
+    def create(cls, content: str, date: date = date.today()) -> bool:
+        """
+        Create a new Entry in the db.
+        Uses the current date by default, or you can provide a date in the past.
+        """
+        if date > date.today():
+            raise ValueError(
+                "Entry cannot be created in the future; "
+                "date must be for today or an earlier date."
+            )
 
-        with dbconnect() as conn:
-            conn.execute(sqlbit, data)
-            app.logger.info("DB: Added new Entry")
-
-    @classmethod
-    def create_backdated(cls, content: str, date: date) -> None:
         sqlbit = (
             "INSERT INTO entries (content, for_day) VALUES (%(content)s, %(date)s);"
         )
@@ -42,8 +43,13 @@ class Entry:
             conn.execute(sqlbit, data)
             app.logger.info("DB: Added new Entry")
 
+        return True
+
     @classmethod
-    def get_today(cls) -> Row:
+    def get_today(cls) -> Row | None:
+        """
+        Get the entry in the database for today's date or return None.
+        """
         sqlbit = f"""SELECT (id, content, for_day, created, updated)
                      FROM entries
                      WHERE for_day = current_date;"""

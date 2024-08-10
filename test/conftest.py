@@ -1,5 +1,6 @@
 # tests/conftest.py
 import pytest
+import flask
 
 import config
 
@@ -18,8 +19,14 @@ def client():
 
 
 @pytest.fixture
+def mock_db(mocker):
+    mocker.patch("app.models.dbconnect")
+    return True
+
+
+@pytest.fixture
 def db_conn():
-    # we assume the database has been freshly created
+    # assume the database has been freshly created
     with dbconnect() as conn:
         # seed with sample data to get started
         load_entries()
@@ -39,4 +46,4 @@ def load_entries() -> None:
         {"text": "most recent one", "date": date_before_today(100)},
     ]
     for seed in seeds:
-        Entry.create_backdated(content=seed["text"], date=seed["date"])
+        Entry.create(content=seed["text"], date=seed["date"])

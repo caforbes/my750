@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 flask = "*"
 flask-wtf = "*"
-psycopg = {extras = ["binary"], version = "*"}
+psycopg = {extras = ["binary"] }
 python-dotenv = "*"
 wtforms = "*"
 pydantic = "*"
@@ -16,6 +16,7 @@ black = "*"
 flake8 = "*"
 pytest = "*"
 pytest-dotenv = "*"
+pytest-mock = "*"
 
 [requires]
 python_version = "3.12"

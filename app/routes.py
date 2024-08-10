@@ -9,6 +9,9 @@ from app.models import Entry
 @app.route("/home")
 @app.route("/index")
 def home():
+    """
+    Homepage - view whether there is an entry today, view archive, etc.
+    """
     today_entry = Entry.get_today()
     last_ten_entries = ["sample", "entry contains things"]
     placeholder_stats = {
@@ -27,6 +30,9 @@ def home():
 @app.route("/new", methods=["GET", "POST"])
 @app.route("/today/new", methods=["GET", "POST"])
 def new():
+    """
+    Create a new entry for today.
+    """
     # If there is already an entry for today, go to the view area instead
     entry = Entry.get_today()
     if entry:
