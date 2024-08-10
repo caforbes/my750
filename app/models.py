@@ -1,6 +1,7 @@
 from datetime import date, datetime
+from typing import Annotated
 from psycopg.rows import Row, namedtuple_row
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, StringConstraints
 
 from app import app
 from app.constants import MAX_ENTRY_LEN
@@ -34,7 +35,7 @@ class Entry:
     @classmethod
     def get_today(cls) -> Row:
         sqlbit = f"""SELECT (id, content, for_day, created, updated)
-                     FROM {cls.table}
+                     FROM entries
                      WHERE for_day = current_date;"""
 
         with dbconnect().cursor(row_factory=namedtuple_row) as conn:
@@ -66,4 +67,9 @@ class EntrySchema(BaseModel):
     created: datetime
     updated: datetime
     for_day: date
-    content: str = Field(min_length=1, max_length=MAX_ENTRY_LEN, strip_whitespace=True)
+    content: Annotated[
+        str,
+        StringConstraints(
+            strip_whitespace=True, min_length=1, max_length=MAX_ENTRY_LEN
+        ),
+    ]
