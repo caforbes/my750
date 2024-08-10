@@ -11,15 +11,24 @@ from app.db import dbconnect
 
 
 class Entry:
-    table = "entries"
-
     @classmethod
     def create(cls, content: str) -> None:
-        sqlbit = f"INSERT INTO {cls.table} (content) VALUES (%(content)s);"
+        sqlbit = "INSERT INTO entries (content) VALUES (%(content)s);"
         data = dict(content=content)
 
         with dbconnect() as conn:
-            result = conn.execute(sqlbit, data)
+            conn.execute(sqlbit, data)
+            app.logger.info("DB: Added new Entry")
+
+    @classmethod
+    def create_backdated(cls, content: str, date: date) -> None:
+        sqlbit = (
+            "INSERT INTO entries (content, for_day) VALUES (%(content)s, %(date)s);"
+        )
+        data = dict(content=content, date=date)
+
+        with dbconnect() as conn:
+            conn.execute(sqlbit, data)
             app.logger.info("DB: Added new Entry")
 
     @classmethod

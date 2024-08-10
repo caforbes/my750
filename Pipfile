@@ -15,6 +15,7 @@ pydantic = "*"
 black = "*"
 flake8 = "*"
 pytest = "*"
+pytest-dotenv = "*"
 
 [requires]
 python_version = "3.12"

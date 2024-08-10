@@ -1,4 +1,3 @@
-import logging
 import psycopg
 
 from app import app
