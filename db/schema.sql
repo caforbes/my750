@@ -9,6 +9,15 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: wordcount(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.wordcount(txt text) RETURNS integer
+    LANGUAGE sql IMMUTABLE STRICT
+    RETURN array_length(regexp_split_to_array(txt, '\s+'::text), 1);
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -96,4 +105,5 @@ ALTER TABLE ONLY public.schema_migrations
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20240807231147');
+    ('20240807231147'),
+    ('20240810230833');

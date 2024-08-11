@@ -7,7 +7,6 @@ cleartestdb:
 	@dbmate -e TEST_DATABASE_URL create
 	@dbmate -e TEST_DATABASE_URL load
 setupdb:
-	@dbmate create
 	@dbmate up
 destroydb:
 	@dbmate drop

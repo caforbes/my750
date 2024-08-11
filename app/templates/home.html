@@ -7,9 +7,8 @@
     <div class="hero-body has-text-centered">
         <p class="title">Today's writing</p>
         {% if written_today %}
-        <!-- TODO: count words from today -->
-        <!-- <p class="subtitle">You've written XXX words so far.</p> -->
-        <a class="button is-primary">
+        <p class="subtitle">You've written {{written_today}} word(s) so far.</p>
+        <a class="button is-primary" href="{{ url_for('today') }}">
             <span class="icon is-small">
                 <i class="fas fa-file-lines"></i>
             </span>
@@ -27,25 +26,24 @@
     </div>
     </div>
 </section>
-<!-- TODO: add review of past entries -->
-<!-- <section class="section">
+<section class="section">
     <div class="content">
         <h2>Looking back</h2>
-        <p>
-            Your last entry was XX days ago / yesterday / today.
-        </p>
+        <!-- <p>
+            TODO: Your last entry was XX days ago / yesterday / today.
+        </p> -->
 
         <p>
-            You've written <strong>{{ stats["total_entries"] }} entries</strong>
-            for a total of <strong>{{ stats["total_words"] }} words</strong>.
+            You've written <strong>{{ entry_count }} entries</strong>.
+            <!-- TODO: for a total of <strong>TOTAL_WORDCOUNT words</strong>. -->
         </p>
     </div>
 
-    {% if past_entries %}
+    <!-- {% if past_entries %}
     <div class="block">
         <button class="button">View interesting stats</button>
     </div>
-    {% endif %}
+    {% endif %} -->
 
 
 
@@ -60,14 +58,18 @@
                 <span class="panel-icon">
                     <i class="fas fa-bookmark" aria-hidden="true"></i>
                 </span>
-                Content: {{ entry[:20] }}
+                <span>
+                    {{ entry.for_day }}
+                    <strong>Words: {{ entry.wdcount }}</strong>
+                    {{ entry.content[:50] }}...
+                </span>
             </a>
             {% endfor %}
         </nav>
     </div>
-    <div class="block">
+    <!-- <div class="block">
         <button class="button">View your archive</button>
-    </div>
+    </div> -->
 
     {% else %}
 
@@ -76,6 +78,6 @@
     </div>
 
     {% endif %}
-</section> -->
+</section>
 
 {% endblock %}

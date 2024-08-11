@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from typing import Annotated
 from psycopg.rows import Row, namedtuple_row
+from psycopg.sql import Literal, SQL
 from pydantic import BaseModel, StringConstraints
 
 from app import app
@@ -13,7 +14,7 @@ from app.db import dbconnect
 
 class Entry:
     @classmethod
-    def count(self):
+    def count(self) -> int:
         """
         Count the number of Entries in the db.
         """
@@ -23,9 +24,9 @@ class Entry:
         return result[0]
 
     @classmethod
-    def create(cls, content: str, date: date = date.today()) -> bool:
+    def create(cls, content: str, date: date = date.today()) -> int:
         """
-        Create a new Entry in the db.
+        Create a new Entry in the database.
         Uses the current date by default, or you can provide a date in the past.
         """
         if date > date.today():
@@ -34,45 +35,96 @@ class Entry:
                 "date must be for today or an earlier date."
             )
 
-        sqlbit = (
-            "INSERT INTO entries (content, for_day) VALUES (%(content)s, %(date)s);"
-        )
-        data = dict(content=content, date=date)
+        sqlbit = SQL(
+            "INSERT INTO entries (content, for_day) VALUES ({content}, {date});"
+        ).format(content=content, date=date)
 
         with dbconnect() as conn:
-            conn.execute(sqlbit, data)
-            app.logger.info("DB: Added new Entry")
+            res = conn.execute(sqlbit)
 
-        return True
+        app.logger.info(f"DB: Created {res.rowcount} new entries")
+        return res.rowcount
 
     @classmethod
     def get_today(cls) -> Row | None:
         """
         Get the entry in the database for today's date or return None.
         """
-        sqlbit = f"""SELECT (id, content, for_day, created, updated)
-                     FROM entries
-                     WHERE for_day = current_date;"""
+        sqlbit = SQL(
+            """SELECT id, content, for_day, created, updated,
+                      wordcount(content) AS wdcount
+               FROM entries
+               WHERE for_day = current_date;"""
+        )
 
         with dbconnect().cursor(row_factory=namedtuple_row) as conn:
             result = conn.execute(sqlbit).fetchone()
 
         return result
 
-    # TODO: get via id
-    # @classmethod
-    # def get(cls, id: int) -> bool:
-    #     sqlbit = f"INSERT INTO {cls.table} (content) VALUES (%(content)s);"
-    #     data = dict(content=content)
+    @classmethod
+    def get(cls, id: int) -> Row | None:
+        """
+        Get the entry matching the provided id in the database.
+        """
+        sqlbit = SQL(
+            """SELECT id, content, for_day, created, updated,
+                           wordcount(content) AS wdcount
+                    FROM entries
+                    WHERE id = {id};"""
+        ).format(id=id)
 
-    #     # with dbconnect() as conn:
-    #     #     result = conn.execute(sqlbit, data)
+        with dbconnect().cursor(row_factory=namedtuple_row) as conn:
+            result = conn.execute(sqlbit).fetchone()
 
-    # TODO: list
-    # TODO: update
-    # TODO: delete
+        # TODO: what happens if no match? return None?
+        return result
 
-    # TODO: any custom functions like stats reading, etc
+    @classmethod
+    def list(cls, limit: int = 10) -> list[Row]:
+        """
+        Get a list of entries in the database up to the limit, the most recent first.
+        """
+        sqlbit = SQL(
+            """SELECT  id, content, for_day, created, updated,
+                       wordcount(content) AS wdcount
+               FROM entries
+               ORDER BY for_day DESC LIMIT {limit};"""
+        ).format(limit=Literal(limit))
+
+        with dbconnect().cursor(row_factory=namedtuple_row) as conn:
+            result = conn.execute(sqlbit).fetchall()
+
+        return result
+
+    @classmethod
+    def update(cls, id: int, content: str) -> int:
+        """
+        Update the text of the entry matching the provided id in the database.
+        """
+        sqlbit = SQL(
+            """UPDATE entries SET content = {content}, updated = now()
+                              WHERE id = {id};"""
+        ).format(id=id, content=content)
+
+        with dbconnect().cursor(row_factory=namedtuple_row) as conn:
+            res = conn.execute(sqlbit)
+
+        app.logger.info(f"DB: Updated {res.rowcount} entries")
+        return res.rowcount
+
+    @classmethod
+    def delete(cls, id: int) -> int:
+        """
+        Delete the entry matching the provided id in the database.
+        """
+        sqlbit = SQL("""DELETE FROM entries WHERE id = {id};""").format(id=id)
+
+        with dbconnect().cursor(row_factory=namedtuple_row) as conn:
+            res = conn.execute(sqlbit)
+
+        app.logger.info(f"DB: Deleted {res.rowcount} entries")
+        return res.rowcount
 
 
 # Data validation schema

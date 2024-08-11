@@ -13,17 +13,13 @@ def home():
     Homepage - view whether there is an entry today, view archive, etc.
     """
     today_entry = Entry.get_today()
-    last_ten_entries = ["sample", "entry contains things"]
-    placeholder_stats = {
-        "total_entries": len(last_ten_entries),
-        "total_words": len([wd for entry in last_ten_entries for wd in entry.split()]),
-    }
+    last_ten_entries = Entry.list(10)
 
     return render_template(
         "home.html",
-        written_today=(today_entry is not None),
+        written_today=today_entry.wdcount if today_entry else 0,
+        entry_count=Entry.count(),
         past_entries=last_ten_entries,
-        stats=placeholder_stats,
     )
 
 

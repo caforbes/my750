@@ -1,12 +1,12 @@
 from app.models import Entry
 
-# GET homepage
-
 
 class TestHomepage:
     path = "/"
 
     def test_homepage_no_entry(self, client, db_conn):
+        count = Entry.count()
+
         response = client.get(self.path)
 
         assert response.status_code == 200
@@ -15,9 +15,11 @@ class TestHomepage:
         # button to create new entry
         assert b"Start writing" in response.data
         assert b"/new" in response.data
+        assert f"{count} entries" in response.text
 
     def test_homepage_with_entry(self, client, db_conn):
         Entry.create("test entry for today")
+        count = Entry.count()
 
         response = client.get(self.path)
 
@@ -25,10 +27,8 @@ class TestHomepage:
         # button to continue today's entry
         assert b"Continue" in response.data
         assert b"/new" not in response.data
+        assert f"{count} entries" in response.text
         # TODO: show the edit or view today button
-
-
-# TODO: GET: create entry
 
 
 class TestCreateNew:
@@ -48,11 +48,9 @@ class TestCreateNew:
 
         assert len(response.history) == 1
 
-        # assert response.request.path == url_for("today") # TODO
+        assert response.request.path == "/today"
         assert b"read today's words" in response.data
-        # assert b"is-danger" in response.data
-
-    # TODO: POST: create entry
+        # assert b"is-danger" in response.data # FIX: after today page is ready
 
     def test_new_entry_post(self, client, db_conn):
         orig_count = Entry.count()
@@ -97,7 +95,5 @@ class TestCreateNew:
         assert len(response.history) == 1
 
         assert response.status_code == 200
-        # FIX
-        # assert b"already exists" in response.data
-        # assert b"is-danger" in response.data
+        # assert b"is-danger" in response.data # FIX: after today page is ready
         assert orig_count == Entry.count()
