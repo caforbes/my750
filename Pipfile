@@ -10,6 +10,7 @@ psycopg = {extras = ["binary"] }
 python-dotenv = "*"
 wtforms = "*"
 pydantic = "*"
+markdown = "*"
 
 [dev-packages]
 black = "*"

@@ -3,6 +3,7 @@ from flask import flash, redirect, render_template, request, url_for
 from app import app
 from app.forms import EntryForm
 from app.models import Entry
+from utils import usertext_to_md
 
 
 @app.route("/")
@@ -57,7 +58,15 @@ def today():
     entry = Entry.get_today()
 
     if not entry:
+        flash("You have not written any words yet today! Start here.")
         return redirect(url_for("new"))
 
-    # TODO: if you found something, display it - with link to today/edit page
-    return "Page to read today's words"
+    html_content = usertext_to_md(entry.content)
+
+    return render_template(
+        "view_entry.html",
+        title=f"Words for today",
+        html_content=html_content,
+        words=entry.wdcount,
+        is_today=True,
+    )

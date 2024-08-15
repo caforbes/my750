@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+
+<section class="section">
+    <div class="box content">
+        {{ html_content|safe }}
+    </div>
+</section>
+<section class="section">
+    <div class="field is-grouped is-grouped-right">
+        <!-- TODO: add current wordcount -->
+        <div class="control">
+            <a class="button is-primary" {% if not is_today %}disabled{% endif %}>
+                <!-- TODO: add link to edit page -->
+                <span class="icon is-small">
+                    <i class="fas fa-pen-to-square"></i>
+                </span>
+                <span>Edit this entry</span>
+            </a>
+        </div>
+        <div class="control">
+            <a href="{{ url_for('home') }}" class="button is-light">Go Home</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
