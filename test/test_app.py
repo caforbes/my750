@@ -1,5 +1,6 @@
 import pytest
 from app.models import Entry
+from test.conftest import load_entries
 import utils
 
 
@@ -21,7 +22,10 @@ class TestHomepage:
         assert b'"/today"' not in response.data
         # Expect statistics of past entries
         assert f"{count} entries" in response.text
-        # TODO: Expect list of recent entries
+        # Expect list of recent entries
+        assert b"Recent entries" in response.data
+        assert b'<nav id="past-entries"' in response.data
+        assert b'<a class="panel-block"' in response.data
 
     def test_homepage_with_entry(self, client, db_conn):
         Entry.create("test entry for today")
@@ -37,7 +41,24 @@ class TestHomepage:
         assert b"/new" not in response.data
         # Expect statistics of past entries
         assert f"{count} entries" in response.text
-        # TODO: Expect list of recent entries
+        # Expect list of recent entries
+        assert b"Recent entries" in response.data
+        assert b'<nav id="past-entries"' in response.data
+        assert b'<a class="panel-block"' in response.data
+
+    def test_homepage_no_previous_entries(self, client, db_conn_empty):
+        for entry in Entry.list():
+            Entry.delete(id=entry.id)
+        assert Entry.count() == 0
+
+        # Expect to visit the homepage
+        response = client.get(self.path)
+        assert response.status_code == 200
+        # Expect statistics of past entries
+        assert b"0 entries" in response.data
+        # Expect list of recent entries is empty
+        assert b'<nav id="past-entries"' not in response.data
+        assert b"no past entries" in response.data
 
 
 class TestCreateNew:

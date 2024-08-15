@@ -4,7 +4,6 @@ from markupsafe import escape
 
 
 def date_before_today(days: int = 0) -> date:
-    # TODO: test
     if days < 0:
         raise ValueError("Provide a number of days that is 0 or greater.")
     delta = timedelta(days=days)
@@ -13,5 +12,4 @@ def date_before_today(days: int = 0) -> date:
 
 def usertext_to_md(text: str) -> str:
     clean_text = escape(text)
-    # TODO: test this with blockquote-like string
     return markdown.markdown(clean_text)
