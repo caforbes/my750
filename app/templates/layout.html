@@ -47,28 +47,33 @@
     </nav>
 
     <section class="section">
-        <header>
-            {% if title %}
-            <h1 class="title">{{ title }}</h1>
-            {% else %}
-            <h1 class="subtitle is-2">Write 750 words per day!</h1>
-            {% endif %}
-        </header>
-    </section>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    <section class="section">
-        {% for category, message in messages %}
-        <div id="flash" class="notification {% if category == 'error' %}is-danger{% else %}is-info{% endif%} is-light">
-            <!-- FIX: delete button should remove message
-              <button class="delete"></button> -->
-            {{ message }}
+        <div class="block">
+            <header>
+                {% if title %}
+                <h1 class="title">{{ title }}</h1>
+                {% else %}
+                <h1 class="subtitle is-2">Write 750 words per day!</h1>
+                {% endif %}
+            </header>
         </div>
-        {% endfor %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="block">
+            <div class="container">
+                {% for category, message in messages %}
+                <div id="flash"
+                    class="notification {% if category == 'error' %}is-danger{% else %}is-info{% endif%} is-light">
+                    <!-- FIX: delete button should remove message
+                <button class="delete"></button> -->
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+        </div>
     </section>
-    {% endif %}
-    {% endwith %}
 
     {% block content %}{% endblock %}
 
