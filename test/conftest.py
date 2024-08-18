@@ -39,18 +39,6 @@ def db_conn():
             conn.execute(sql)
 
 
-@pytest.fixture
-def db_conn_empty():
-    # assume the database has been freshly created
-    with dbconnect() as conn:
-        yield conn
-
-        # drop all the stuff and tables
-        sqls = ["DELETE FROM entries;"]
-        for sql in sqls:
-            conn.execute(sql)
-
-
 def load_entries() -> None:
     seeds = [
         {"text": "first entry", "date": date_before_today(1)},

@@ -50,7 +50,37 @@ def new():
     elif request.method == "POST":
         flash("You must write some words before saving!", category="error")
 
-    return render_template("today_new.html", title="A new day", form=form)
+    return render_template("entry_new.html", title="A new day", form=form)
+
+
+@app.route("/today/edit", methods=["GET", "POST"])
+def edit_today():
+    """
+    Edit today's entry.
+    """
+    # FIX: what if it goes past midnight
+    entry = Entry.get_today()
+    if not entry:
+        flash(
+            "There is no entry for today, but you can create a new one!",
+        )
+        return redirect(url_for("new"))
+
+    form = EntryForm(formdata=request.form, obj=entry)
+    if form.validate_on_submit():
+        res = Entry.update(id=entry.id, content=form.data["content"])
+        if res == 1:
+            flash("Thanks for the latest words!")
+            return redirect(url_for("today"))
+        else:
+            flash("Something went wrong!", category="error")
+    elif request.method == "POST":
+        flash("Couldn't save that. There were no words to save!", category="error")
+        form.content.data = entry.content  # go back to original content
+
+    return render_template(
+        "entry_edit.html", title="Edit today's entry", form=form, entry=entry
+    )
 
 
 @app.route("/today")
@@ -64,7 +94,7 @@ def today():
     html_content = usertext_to_md(entry.content)
 
     return render_template(
-        "view_entry.html",
+        "entry_view.html",
         title=f"Words for today",
         html_content=html_content,
         words=entry.wdcount,

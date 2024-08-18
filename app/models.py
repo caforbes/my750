@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from typing import Annotated
+from psycopg import IntegrityError
 from psycopg.rows import Row, namedtuple_row
 from psycopg.sql import Literal, SQL
 from pydantic import BaseModel, StringConstraints
@@ -39,23 +40,25 @@ class Entry:
             "INSERT INTO entries (content, for_day) VALUES ({content}, {date});"
         ).format(content=content, date=date)
 
-        with dbconnect() as conn:
-            res = conn.execute(sqlbit)
+        try:
+            with dbconnect() as conn:
+                res = conn.execute(sqlbit)
 
-        app.logger.info(f"DB: Created {res.rowcount} new entries")
-        return res.rowcount
+            app.logger.info(f"DB: Created {res.rowcount} new entries")
+            return res.rowcount
+        except IntegrityError:
+            app.logger.warning(f"DB: Attempt to create entry for duplicate day")
+            return 0
 
     @classmethod
     def get_today(cls) -> Row | None:
         """
         Get the entry in the database for today's date or return None.
         """
-        sqlbit = SQL(
-            """SELECT id, content, for_day, created, updated,
-                      wordcount(content) AS wdcount
-               FROM entries
-               WHERE for_day = current_date;"""
-        )
+        sqlbit = """SELECT id, content, for_day, created, updated,
+                           wordcount(content) AS wdcount
+                    FROM entries
+                    WHERE for_day = current_date;"""
 
         with dbconnect().cursor(row_factory=namedtuple_row) as conn:
             result = conn.execute(sqlbit).fetchone()
@@ -69,15 +72,14 @@ class Entry:
         """
         sqlbit = SQL(
             """SELECT id, content, for_day, created, updated,
-                           wordcount(content) AS wdcount
-                    FROM entries
-                    WHERE id = {id};"""
+                      wordcount(content) AS wdcount
+               FROM entries
+               WHERE id = {id};"""
         ).format(id=id)
 
         with dbconnect().cursor(row_factory=namedtuple_row) as conn:
             result = conn.execute(sqlbit).fetchone()
 
-        # TODO: what happens if no match? return None?
         return result
 
     @classmethod
@@ -107,7 +109,7 @@ class Entry:
                               WHERE id = {id};"""
         ).format(id=id, content=content)
 
-        with dbconnect().cursor(row_factory=namedtuple_row) as conn:
+        with dbconnect() as conn:
             res = conn.execute(sqlbit)
 
         app.logger.info(f"DB: Updated {res.rowcount} entries")
@@ -120,7 +122,7 @@ class Entry:
         """
         sqlbit = SQL("""DELETE FROM entries WHERE id = {id};""").format(id=id)
 
-        with dbconnect().cursor(row_factory=namedtuple_row) as conn:
+        with dbconnect() as conn:
             res = conn.execute(sqlbit)
 
         app.logger.info(f"DB: Deleted {res.rowcount} entries")

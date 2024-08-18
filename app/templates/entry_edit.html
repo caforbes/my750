@@ -3,6 +3,7 @@
 {% block content %}
 
 <section class="section">
+    <!-- FIX THE DIRECTION OF THE POST -->
     <form action="" method="post">
 
         {{ form.hidden_tag() }}
@@ -10,7 +11,7 @@
         <div class="field">
             <label class="label">{{ form.content.label }}</label>
             <div class="control">
-                {{ form.content(class_="textarea", rows="15") }}
+                {{ form.content(class_="textarea", rows="15", placeholder="Write here! Markdown accepted.") }}
             </div>
         </div>
 
@@ -19,7 +20,7 @@
                 {{ form.submit(class_="button is-success") }}
             </div>
             <div class="control">
-                <a href="{{ url_for('home') }}" class="button is-light">Go Back</a>
+                <a href="{{ url_for('home') }}" class="button is-light">Cancel</a>
             </div>
         </div>
         <p></p>

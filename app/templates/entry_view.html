@@ -12,7 +12,7 @@
     <div class="field is-grouped is-grouped-right">
         <!-- TODO: add current wordcount -->
         <div class="control">
-            <a class="button is-primary" {% if not is_today %}disabled{% endif %}>
+            <a class="button is-primary" href="{{ url_for('edit_today') }}" {% if not is_today %}disabled{% endif %}>
                 <!-- TODO: add link to edit page -->
                 <span class="icon is-small">
                     <i class="fas fa-pen-to-square"></i>
