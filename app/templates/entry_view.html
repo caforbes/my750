@@ -7,13 +7,17 @@
     <div class="box content">
         {{ html_content|safe }}
     </div>
-</section>
-<section class="section">
+    <div class="block">
+        <progress value="{{ words }}" max="750"
+            class="progress {% if words >= 750 %}is-success{% else %}is-info{% endif %}"></progress>
+        <p class="content has-text-right">
+            Word Count:
+            <span class="wordcount-display">{{ words }}</span>
+        </p>
+    </div>
     <div class="field is-grouped is-grouped-right">
-        <!-- TODO: add current wordcount -->
         <div class="control">
             <a class="button is-primary" href="{{ url_for('edit_today') }}" {% if not is_today %}disabled{% endif %}>
-                <!-- TODO: add link to edit page -->
                 <span class="icon is-small">
                     <i class="fas fa-pen-to-square"></i>
                 </span>

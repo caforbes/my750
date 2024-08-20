@@ -3,8 +3,7 @@
 {% block content %}
 
 <section class="section">
-    <!-- FIX THE DIRECTION OF THE POST -->
-    <form action="" method="post">
+    <form id="entry-form" action="" method="post">
 
         {{ form.hidden_tag() }}
 
@@ -15,6 +14,14 @@
             </div>
         </div>
 
+        <div class="block">
+            <progress value="{{ entry.wdcount }}" max="750"
+                class="progress {% if entry.wdcount >= 750 %}is-success{% else %}is-info{% endif %}"></progress>
+            <p class="content has-text-right">
+                Word Count:
+                <span class="wordcount-display">{{ entry.wdcount }}</span>
+            </p>
+        </div>
         <div class="field is-grouped is-grouped-right">
             <div class="control">
                 {{ form.submit(class_="button is-success") }}
@@ -26,5 +33,7 @@
         <p></p>
     </form>
 </section>
+
+<script src="{{ url_for('static', filename='liveCounter.js') }}"></script>
 
 {% endblock %}

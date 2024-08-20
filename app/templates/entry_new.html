@@ -1,9 +1,8 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
 <section class="section">
-    <form action="" method="post">
+    <form id="entry-form" action="" method="post">
 
         {{ form.hidden_tag() }}
 
@@ -14,6 +13,13 @@
             </div>
         </div>
 
+        <div class="block">
+            <progress value="0" max="750" class="progress is-info"></progress>
+            <p class="content has-text-right">
+                Word Count:
+                <span class="wordcount-display">0</span>
+            </p>
+        </div>
         <div class="field is-grouped is-grouped-right">
             <div class="control">
                 {{ form.submit(class_="button is-success") }}
@@ -22,8 +28,9 @@
                 <a href="{{ url_for('home') }}" class="button is-light">Go Back</a>
             </div>
         </div>
-        <p></p>
     </form>
 </section>
+
+<script src="{{ url_for('static', filename='liveCounter.js') }}"></script>
 
 {% endblock %}

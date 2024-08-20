@@ -71,6 +71,7 @@ class TestCreateNew:
         assert response.status_code == 200
         assert b'method="post"' in response.data
         assert b'<div id="flash"' not in response.data
+        assert b'<progress value="0" max="750"' in response.data
 
     def test_new_entry_get_already_exists(self, client, db_conn):
         Entry.create("test entry for today")
@@ -150,6 +151,8 @@ class TestViewToday:
         # Expect links to editing and other page elements
         assert b"/today/edit" in response.data
         assert b">Go Home" in response.data
+        expected_count = len(entry_text.split())
+        assert f'<progress value="{expected_count}" max="750"' in response.text
 
     def test_get_today_none(self, client, db_conn):
         response = client.get(self.path, follow_redirects=True)
@@ -164,7 +167,6 @@ class TestViewToday:
 class TestEditToday:
     path = "/today/edit"
     today = date.today()
-    # dated_path = f"/{today.year}/{today.month}/{today.day}/edit"
 
     def test_edit_today_get(self, client, db_conn):
         old_text = "my old entry"
@@ -179,6 +181,8 @@ class TestEditToday:
         assert b'<div id="flash"' not in response.data
         # Expect old content in form
         assert old_text in response.text
+        expected_count = len(old_text.split())
+        assert f'<progress value="{expected_count}" max="750"' in response.text
 
     def test_edit_today_get_no_entry(self, client, db_conn):
         response = client.get(self.path, follow_redirects=True)
@@ -188,7 +192,6 @@ class TestEditToday:
         assert "/new" in response.request.path
         assert response.status_code == 200
         assert b'"flash"' in response.data
-        # TODO: maybe also have old content in it?
 
     def test_edit_today_post(self, client, db_conn):
         old_text = "my old entry"
@@ -228,10 +231,8 @@ class TestEditToday:
         assert entry.created == entry.updated
         assert entry.content == old_text
         # Expect rerendering of the edit form with old text and warning
+        # (it's okay to use old text because error only happens on blanks)
         assert response.status_code == 200
         assert b'method="post"' in response.data
         assert b"is-danger" in response.data
         assert old_text in response.text
-
-    # TODO: post entry with past date
-    # TODO: post entry with bad/noentry date
