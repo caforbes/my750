@@ -73,11 +73,11 @@ Run tests:
 make test
 ```
 
-<!-- TODO: Run tests and show a coverage report in the terminal:
+Run all tests, including type checking, and show a coverage report in the terminal:
 
 ```sh
-make coverage
-``` -->
+make testall
+```
 
 ### Run the app
 
