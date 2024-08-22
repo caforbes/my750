@@ -1,7 +1,7 @@
 from datetime import date, datetime
-from typing import Annotated
-from psycopg import IntegrityError
-from psycopg.rows import Row, namedtuple_row
+from typing import Annotated, NamedTuple, Optional
+from psycopg import DatabaseError, IntegrityError
+from psycopg.rows import namedtuple_row
 from psycopg.sql import Literal, SQL
 from pydantic import BaseModel, StringConstraints
 
@@ -22,7 +22,12 @@ class Entry:
         sql_count = "SELECT count(id) FROM entries;"
         with dbconnect() as conn:
             result = conn.execute(sql_count).fetchone()
-        return result[0]
+
+        if result is None:
+            app.logger.error("Database error: Entry count could not be accessed")
+            return 0
+        else:
+            return result[0]
 
     @classmethod
     def create(cls, content: str, date: date = date.today()) -> int:
@@ -51,7 +56,7 @@ class Entry:
             return 0
 
     @classmethod
-    def get_today(cls) -> Row | None:
+    def get_today(cls) -> Optional[NamedTuple]:
         """
         Get the entry in the database for today's date or return None.
         """
@@ -66,7 +71,7 @@ class Entry:
         return result
 
     @classmethod
-    def get(cls, id: int) -> Row | None:
+    def get(cls, id: int) -> Optional[NamedTuple]:
         """
         Get the entry matching the provided id in the database.
         """
@@ -83,7 +88,7 @@ class Entry:
         return result
 
     @classmethod
-    def list(cls, limit: int = 10) -> list[Row]:
+    def list(cls, limit: int = 10) -> list[NamedTuple]:
         """
         Get a list of entries in the database up to the limit, the most recent first.
         """

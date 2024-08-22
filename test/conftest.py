@@ -1,6 +1,5 @@
 # tests/conftest.py
 import pytest
-import flask
 
 import config
 

@@ -15,7 +15,9 @@ markdown = "*"
 [dev-packages]
 black = "*"
 flake8 = "*"
+mypy = "*"
 pytest = "*"
+pytest-coverage = "*"
 pytest-dotenv = "*"
 pytest-mock = "*"
 
